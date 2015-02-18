@@ -16,5 +16,20 @@ exports.stringify = function(model) {
 };
 
 exports.validate = function(doc, model) {
-    return doc;
+    return _.chain(doc)
+            .pick(_.keys(model))
+            .pairs()
+            .map(function(keyNested) {
+                if (model[keyNested[0]] === true) {
+                    return keyNested;
+                } else {
+                    return [keyNested[0], exports.validate(keyNested[1], model[keyNested[0]])];
+                }
+            })
+            .reduce(function(accumulator, keyNested) {
+                var obj = {};
+                obj[keyNested[0]] = keyNested[1];
+                return _.extend(accumulator, obj);
+            }, {})
+            .value();
 };
