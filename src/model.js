@@ -2,6 +2,16 @@
 
 var _ = require('lodash');
 
+exports.parse = function(fields) {
+    return _.omit(JSON.parse(('(' + fields + ')')
+                      .replace(/:/g, '":')
+                      .replace(/\(/g, '{"')
+                      .replace(/\)/g, '}')
+                      .replace(/(\}+)/g, '":true$1')
+                      .replace(/,/g, '":true,"')
+                      .replace(/([^\}])$/g, '$1"')), '');
+};
+
 exports.stringify = function(model) {
     return _.chain(model)
             .pairs()
