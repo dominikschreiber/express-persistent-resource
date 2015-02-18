@@ -73,4 +73,6 @@ module.exports = function(service) {
     router.update = function(req, res, next) {
         save(_.extend(req.body, {id: req.params.id}), req, res, next);
     };
+    
+    return router;
 };
