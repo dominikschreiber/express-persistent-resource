@@ -1,0 +1,28 @@
+{
+  "name": "express-persistent-resource",
+  "version": "0.0.1",
+  "description": "RESTful resource middleware that handles all database stuff by itself. Just define the &fields= query string and go.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dominikschreiber/express-persistent-resource.git"
+  },
+  "keywords": [
+    "express",
+    "rest",
+    "db"
+  ],
+  "author": "Dominik Schreiber <dominik@dominikschreiber.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dominikschreiber/express-persistent-resource/issues"
+  },
+  "homepage": "https://github.com/dominikschreiber/express-persistent-resource",
+  "dependencies": {
+    "express": "^4.11.2",
+    "lodash": "^3.2.0"
+  }
+}
