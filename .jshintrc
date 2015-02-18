@@ -1,0 +1,12 @@
+{
+	// enforcing
+	"curly": true,
+	"quotmark": "single",
+  // relaxing
+	"globalstrict": true,
+	"laxbreak": true,
+	"laxcomma": true,
+	// environment
+	"node": true,
+    "mocha": true
+}
