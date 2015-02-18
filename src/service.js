@@ -36,6 +36,10 @@ module.exports = function(db, options) {
             }
             db.insert(docs, design);
         });
+        
+        if (typeof configuration.fields === 'string') {
+            configuration.fields = model.parse(configuration.fields);
+        }
     };
     
     function isVersionedInDatabase(doc) {
