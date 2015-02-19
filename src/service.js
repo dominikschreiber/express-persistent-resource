@@ -5,18 +5,18 @@ module.exports = function(db, options) {
       , _ = require('lodash')
       , crypto = require('crypto')
       , model = require('./model')
-      , configuration = _.extend({
+      , configuration = _.defaults(options, {
           view: '',
           fields: {},
           id: function(entry) {
               return (new Date()).getTime() + '-' + hash(entry).slice(0,8);
           }
-      }, options);
-    
+      });
+
     function hash(entry) {
         return crypto.createHash('sha256').update(JSON.stringify(entry)).digest('hex');
     }
-    
+
     /**
      * Sets up the db with a view for entries managed by this service.
      * Parses configuration.fields to an object if necessary.
@@ -28,7 +28,7 @@ module.exports = function(db, options) {
                     map: 'function(doc) { if (doc._id.indexOf("' + configuration.view + '-") === 0) { emit(doc._id, doc); } }'
                 }
             }, additionalViews);
-        
+
         db.get(design, function(err, result) {
            var docs = { views: views };
             if (isVersionedInDatabase(result)) {
@@ -36,21 +36,21 @@ module.exports = function(db, options) {
             }
             db.insert(docs, design);
         });
-        
+
         if (typeof configuration.fields === 'string') {
             configuration.fields = model.parse(configuration.fields);
         }
     };
-    
+
     function isVersionedInDatabase(doc) {
         return doc !== undefined
             && doc._rev !== undefined;
     }
-    
+
     function addVersionFromDatabase(doc, versioned) {
         return _.extend(doc, { _rev: versioned._rev });
     }
-    
+
     /**
      * finds all entries managed by this service
      */
@@ -63,15 +63,15 @@ module.exports = function(db, options) {
             }
         });
     };
-    
+
     function pickPublicIdFromRow(row) {
         return pickPublicIdFromId(row.value._id);
     }
-    
+
     function pickPublicIdFromId(_id) {
         return _id.slice((configuration.view + '-').length);
     }
-    
+
     /**
      * finds the entry with the specified public id that is managed by this service
      */
@@ -81,7 +81,7 @@ module.exports = function(db, options) {
             include_docs: true
         }, function(err, result) {
             var doc;
-            
+
             if (err) {
                 next(err);
             } else if (_.isEmpty(result.rows)) {
@@ -92,11 +92,11 @@ module.exports = function(db, options) {
             }
         });
     };
-    
+
     function createPrivateId(id) {
         return [configuration.view, id].join('-');
     }
-    
+
     /**
      * saves/updates the managed entry.
      * validates it against the model specified in the configuration.
@@ -105,7 +105,7 @@ module.exports = function(db, options) {
         var safe = model.validate(entry, configuration.model)
           , id = safe.id
           , _id = createPrivateId(id);
-        
+
         if (_.isEmpty(safe) && !_.isEmpty(entry)) {
             next(new Error('entry ' + JSON.stringify(entry) + ' does not match model ' + model.stringify(configuration.model)));
         } else if (id !== undefined) {
@@ -123,7 +123,7 @@ module.exports = function(db, options) {
             insertInDatabase(extendWithIds(safe), next);
         }
     };
-    
+
     function insertInDatabase(doc, next) {
         db.insert(doc, doc._id, function(err) {
             if (err) {
@@ -133,16 +133,16 @@ module.exports = function(db, options) {
             }
         });
     }
-    
+
     function extendWithIds(doc) {
         var id = configuration.id(doc)
           , _id = createPrivateId(id);
-        
+
         return _.extend(doc, {
             id: id,
             _id: _id
         });
     }
-    
+
     return service;
 };
