@@ -4,7 +4,7 @@ module.exports = function(name, db, options) {
     var _ = require('lodash')
       , configuration = _.extend({view: name}, options)
       , service = require('./service')(db, {
-            view: configuration.view
+            view: configuration.view,
             fields: configuration.fields,
             id: configuration.id
         })
