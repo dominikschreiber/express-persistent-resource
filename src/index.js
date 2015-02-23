@@ -2,8 +2,9 @@
 
 module.exports = function(name, db, options) {
     var _ = require('lodash')
+      , couch = (typeof db === 'string') ? require('nano')(db) : db
       , configuration = _.extend({view: name}, options)
-      , service = require('./service')(db, {
+      , service = require('./service')(couch, {
             view: configuration.view,
             fields: configuration.fields,
             id: configuration.id
