@@ -52,6 +52,10 @@ describe('model', function() {
             '{"id":5,"snippet":"foo","name":{"firstname":"foo","lastname":"bar"}}': {
                 doc: {id: 5, snippet: 'foo', name: {firstname: 'foo', lastname: 'bar'}, glob: 'al', sh: {it: true}},
                 model: {id:true, snippet:true, name: {firstname:true, lastname:true}}
+            },
+            '{"id":5,"history":[{"timestamp":"0815","event":"none"},{"timestamp":"1337","event":"all"}]}': {
+                doc: {id: 5, history: [{timestamp: '0815', event: 'none'}, {timestamp: '1337', event: 'all'}]},
+                model: {id:true, history: {timestamp:true, event:true}}
             }
         }, function(test) {
             return 'return ' + test[0] + ' when validating\n\t\t' + JSON.stringify(test[1].doc) + ' against\n\t\t' + model.stringify(test[1].model);
