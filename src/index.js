@@ -13,10 +13,13 @@ module.exports = function(name, db, options) {
         })
       , middleware = require('express').Router();
 
-    middleware.get('/', router.list);
-    middleware.post('/', router.create);
-    middleware.get('/:id', router.read);
-    middleware.put('/:id', router.update);
+    middleware.route('/')
+        .get(router.list)
+        .post(router.create);
+    
+    middleware.route('/:id')
+        .get(router.read)
+        .put(router.update);
 
     return middleware;
 };
