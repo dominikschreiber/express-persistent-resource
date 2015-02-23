@@ -30,10 +30,17 @@ exports.validate = function(doc, model) {
             .pick(_.keys(model))
             .pairs()
             .map(function(keyNested) {
-                if (model[keyNested[0]] === true) {
+                var key = keyNested[0]
+                  , nested = keyNested[1];
+        
+                if (model[key] === true) {
                     return keyNested;
                 } else {
-                    return [keyNested[0], exports.validate(keyNested[1], model[keyNested[0]])];
+                    if (_.isArray(nested)) {
+                        return [key, _.map(nested, function(elem) { return exports.validate(elem, model[key]); })];
+                    } else {
+                        return [key, exports.validate(nested, model[key])];
+                    }
                 }
             })
             .reduce(function(accumulator, keyNested) {
