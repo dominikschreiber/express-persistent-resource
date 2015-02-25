@@ -1,5 +1,7 @@
 # express-persistent-resource
 
+[![Join the chat at https://gitter.im/dominikschreiber/express-persistent-resource](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dominikschreiber/express-persistent-resource?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/dominikschreiber/express-persistent-resource.svg?branch=master)](https://travis-ci.org/dominikschreiber/express-persistent-resource)
 
 *express-persistent-resource* creates a full-featured CRUD resource (express) middleware that persists all information to a given CouchDB instance. It's as simple as
