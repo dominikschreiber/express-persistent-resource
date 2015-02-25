@@ -4,7 +4,8 @@
   "description": "RESTful resource middleware that handles all database stuff by itself. Just define the &fields= query string and go.",
   "main": "src/index.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha"
+    "test": "node_modules/.bin/mocha",
+    "example": "node test/examples/cat.js"
   },
   "repository": {
     "type": "git",
