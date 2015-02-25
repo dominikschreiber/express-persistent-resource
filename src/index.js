@@ -6,6 +6,7 @@ module.exports = function(name, db, options) {
       , configuration = _.extend({view: name}, options)
       , service = require('./service')(couch, {
             view: configuration.view,
+            views: configuration.views,
             fields: configuration.fields,
             id: configuration.id
         })
@@ -20,7 +21,8 @@ module.exports = function(name, db, options) {
     
     middleware.route('/:id')
         .get(router.read)
-        .put(router.update);
+        .put(router.update)
+        .delete(router.delete);
 
     return middleware;
 };
