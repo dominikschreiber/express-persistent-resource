@@ -67,6 +67,19 @@ tbd
 
 Basic CRUD works (& is tested). It is planned to serve all features described in the Web API Design book.
 
+## changelog
+
+### 0.0.2
+
+- `DELETE /:id`
+
+### 0.0.1
+
+- `GET /`
+- `POST /`
+- `GET /:id`
+- `PUT /:id`
+
 ## license
 
 The MIT License (MIT)
