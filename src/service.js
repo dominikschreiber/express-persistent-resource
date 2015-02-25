@@ -104,10 +104,10 @@ module.exports = function(db, options) {
      * validates it against the model specified in the configuration.
      */
     service.save = function(entry, next) {
-        var safe = model.validate(entry, configuration.model)
+        var safe = model.validate(entry, configuration.fields)
           , id = safe.id
           , _id = createPrivateId(id);
-
+        
         if (_.isEmpty(safe) && !_.isEmpty(entry)) {
             next(new Error('entry ' + JSON.stringify(entry) + ' does not match model ' + model.stringify(configuration.model)));
         } else if (id !== undefined) {
@@ -153,7 +153,7 @@ module.exports = function(db, options) {
         var _id = createPrivateId(id);
         
         db.get(_id, function(gerr, gresult) {
-            db.insert(_id, _.extend(gresult, {_deleted: true}), next);
+            db.insert(_.extend(gresult, {_deleted: true}), _id, next);
         });
     };
     
