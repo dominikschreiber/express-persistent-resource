@@ -18,7 +18,8 @@ describe('model', function() {
             '{}': '',
             '{"id":true,"snippet":true}': 'id,snippet',
             '{"id":true,"snippet":{"title":true,"name":true}}': 'id,snippet:(title,name)',
-            '{"foo":{"bar":{"baz":{"goo":true,"gle":true}}}}': 'foo:(bar:(baz:(goo,gle)))'
+            '{"foo":{"bar":{"baz":{"goo":{"gle":{"is":{"no":{"evil":true}}}}}}}}': 'foo:(bar:(baz:(goo:(gle:(is:(no:(evil)))))))',
+            '{"foo":{"goo":true,"gle":true},"bar":{"is":true,"no":true},"baz":{"evil":true,"thing":true}}': 'foo:(goo,gle),bar:(is,no),baz:(evil,thing)'
         }, function(test) {
             return 'parse ' + test[0] + ' from ' + test[1];
         }, function(input) {
