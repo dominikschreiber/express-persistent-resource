@@ -69,6 +69,10 @@ Basic CRUD works (& is tested). It is planned to serve all features described in
 
 ## changelog
 
+### 0.0.3
+
+- *fix:* fields strings with multiple nested objects (e.g. `foo:(bar,baz),goo:(g,le)`) are now handled correctly
+
 ### 0.0.2
 
 - `DELETE /:id`
