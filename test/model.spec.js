@@ -58,7 +58,7 @@ describe('model', function() {
                 model: {id:true, history: {timestamp:true, event:true}}
             }
         }, function(test) {
-            return 'return ' + test[0] + ' when validating\n\t\t' + JSON.stringify(test[1].doc) + ' against\n\t\t' + model.stringify(test[1].model);
+            return 'return ' + test[0] + ' when validating ' + JSON.stringify(test[1].doc) + ' against ' + model.stringify(test[1].model);
         }, function(input) {
             return JSON.stringify(model.validate(input.doc, input.model));
         });
