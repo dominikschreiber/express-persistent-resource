@@ -8,6 +8,7 @@ module.exports = function(db, options) {
       , configuration = _.defaults(options, {
           view: '',
           fields: {},
+          views: {},
           id: function(entry) {
               return (new Date()).getTime() + '-' + hash(entry).slice(0,8);
           }
@@ -21,16 +22,16 @@ module.exports = function(db, options) {
      * Sets up the db with a view for entries managed by this service.
      * Parses configuration.fields to an object if necessary.
      */
-    service.init = function(additionalViews) {
-        var design = '_/design' + configuration.view
+    service.init = function() {
+        var design = '_design/' + configuration.view
           , views = _.extend({
                 findAll: {
                     map: 'function(doc) { if (doc._id.indexOf("' + configuration.view + '-") === 0) { emit(doc._id, doc); } }'
                 }
-            }, additionalViews);
+            }, configuration.views);
 
         db.get(design, function(err, result) {
-           var docs = { views: views };
+            var docs = { views: views };
             if (isVersionedInDatabase(result)) {
                 addVersionFromDatabase(docs, result);
             }
@@ -41,6 +42,7 @@ module.exports = function(db, options) {
             configuration.fields = model.parse(configuration.fields);
         }
     };
+    service.init();
 
     function isVersionedInDatabase(doc) {
         return doc !== undefined
@@ -143,6 +145,17 @@ module.exports = function(db, options) {
             _id: _id
         });
     }
-
+    
+    /**
+     * deletes the managed entry specified by id
+     */
+    service.delete = function(id, next) {
+        var _id = createPrivateId(id);
+        
+        db.get(_id, function(gerr, gresult) {
+            db.insert(_id, _.extend(gresult, {_deleted: true}), next);
+        });
+    };
+    
     return service;
 };
