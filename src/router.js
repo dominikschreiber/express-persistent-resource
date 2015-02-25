@@ -74,5 +74,20 @@ module.exports = function(service) {
         save(_.extend(req.body, {id: req.params.id}), req, res, next);
     };
     
+    /**
+     * deletes the resource req.params.id,
+     * responds with 200 + mount point
+     */
+    router.delete = function(req, res, next) {
+        service.delete(req.params.id, function(err) {
+            if (err) {
+                router.error(res, err, next);
+            } else {
+                res.json(req.baseUrl);
+                next();
+            }
+        });
+    };
+    
     return router;
 };
