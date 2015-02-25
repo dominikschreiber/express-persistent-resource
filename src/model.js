@@ -8,7 +8,8 @@ exports.parse = function(fields) {
                       .replace(/\(/g, '{"')
                       .replace(/\)/g, '}')
                       .replace(/(\}+)/g, '":true$1')
-                      .replace(/,/g, '":true,"')
+                      .replace(/([^\}]),/g, '$1":true,"')
+                      .replace(/\},/g, '},"')
                       .replace(/([^\}])$/g, '$1"')), '');
 };
 
