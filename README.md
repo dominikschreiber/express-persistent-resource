@@ -76,14 +76,14 @@ Basic CRUD works (& is tested). It is planned to serve all features described in
 
 ### 0.0.2
 
-- `DELETE /:id`
+- `DELETE /:id` deletes the document specified by `:id`, returns url of the resource mount point (e.g. `/api/v1/cat`)
 
 ### 0.0.1
 
-- `GET /`
-- `POST /`
-- `GET /:id`
-- `PUT /:id`
+- `GET /` returns list of urls relative to `/` (e.g. when mounted at `/api/v1/cat`: `['/api/v1/cat/foo','/api/v1/cat/bar']`)
+- `POST /` creates a new document, returns url of that document (e.g. `/api/v1/cat/baz`)
+- `GET /:id` returns the document specified by `:id`
+- `PUT /:id` updates the document specified by `:id`, returns url of the updated document (e.g. `/api/v1/cat/baz`)
 
 ## license
 
