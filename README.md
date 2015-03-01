@@ -66,15 +66,15 @@ Basic CRUD works (& is tested). It is planned to serve all features described in
 
 ## planned
 
-[ ] `?field=filter`: list `resource`s that match `filter` on `field`. Support `=` (exact match), `~=` (one of), `|=` (exact match, or starting with + `-`), `^=` (starts with), `$=` (ends with) and `*=` (contains).
-[ ] `?fields=`: partial response (filtered by `model.validate`)
-[ ] `?limit=` and `?offset=`: pagination (`limit` entries per call, `offset` entries skipped)
-[ ] `?q=`: search resources for query
-[ ] `?method=`: override http method with `method` (`GET /?method=POST` equals `POST /`)
-[ ] `?suppress_response_codes=true`: override response code with `200`, put response code in result
-[ ] `.json` / `Accept: application/json`: (default) resources as json
-[ ] `.xml` / `Accept: text/xml`: resources as xml
-[ ] `.yml` / `Accept: application/yaml`: resources as yaml
+- [ ] `?field=filter`: list `resource`s that match `filter` on `field`. Support `=` (exact match), `~=` (one of), `|=` (exact match, or starting with + `-`), `^=` (starts with), `$=` (ends with) and `*=` (contains).
+- [ ] `?fields=`: partial response (filtered by `model.validate`)
+- [ ] `?limit=` and `?offset=`: pagination (`limit` entries per call, `offset` entries skipped)
+- [ ] `?q=`: search resources for query
+- [ ] `?method=`: override http method with `method` (`GET /?method=POST` equals `POST /`)
+- [ ] `?suppress_response_codes=true`: override response code with `200`, put response code in result
+- [ ] `.json` / `Accept: application/json`: (default) resources as json
+- [ ] `.xml` / `Accept: text/xml`: resources as xml
+- [ ] `.yml` / `Accept: application/yaml`: resources as yaml
 
 ## changelog
 
