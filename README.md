@@ -60,13 +60,21 @@ app.use('/api/v1/evenmore', resource('evenmore', couchdbInstance, {
     - `id`: function that determines how ids of this resource should look like. Is called with the incoming entry to create an id for it. Defaults to a substring of the sha256-hash of the entry.
     - `views`: additional map/reduce views given to the CouchDB service. May be removed in the future. See the [CouchDB Guide](http://guide.couchdb.org/draft/design.html#basic) for details (this property is merged into the `views` property of the design document).
 
-### supported query parameters
-
-tbd
-
 ## current status
 
 Basic CRUD works (& is tested). It is planned to serve all features described in the Web API Design book.
+
+## planned
+
+[ ] `?field=filter`: list `resource`s that match `filter` on `field`. Support `=` (exact match), `~=` (one of), `|=` (exact match, or starting with + `-`), `^=` (starts with), `$=` (ends with) and `*=` (contains).
+[ ] `?fields=`: partial response (filtered by `model.validate`)
+[ ] `?limit=` and `?offset=`: pagination (`limit` entries per call, `offset` entries skipped)
+[ ] `?q=`: search resources for query
+[ ] `?method=`: override http method with `method` (`GET /?method=POST` equals `POST /`)
+[ ] `?suppress_response_codes=true`: override response code with `200`, put response code in result
+[ ] `.json` / `Accept: application/json`: (default) resources as json
+[ ] `.xml` / `Accept: text/xml`: resources as xml
+[ ] `.yml` / `Accept: application/yaml`: resources as yaml
 
 ## changelog
 
