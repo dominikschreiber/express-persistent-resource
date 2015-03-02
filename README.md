@@ -66,44 +66,44 @@ Basic CRUD works (& is tested). It is planned to serve all features described in
 
 ## planned features
 
-- [ ] **`/`:** all resources
-  - [x] **`OPTIONS /`:** list methods
-  - [x] **`GET /`:** list resource urls
-  - [x] **`POST /`:** create resource
-  - [ ] **`PUT /`:** bulk update resources
-  - [ ] **`DELETE /`:** delete all resources
-- [ ] **`/:id`:** a single resource
-  - [x] **`GET /:id`:** read resource
-  - [ ] **`POST /:id`:** error -> use `PUT /:id` or `POST /`
-  - [x] **`PUT /:id`:** update resource
-  - [x] **`DELETE /:id`:** delete resource
-- [ ] **`/:id/:field`:** all nested resources
-  - [ ] **`GET /:id/:field`:** list nested resources (simulate with `GET /:id?fields=:field`)
-  - [ ] **`POST /:id/:field`:** create nested resource (added to `:field` list)
-  - [ ] **`PUT /:id/:field`:** bulk update nested resources
-  - [ ] **`DELETE /:id/:field`:** delete all nested resources
-- [ ] **`/:id/:field/:id`:** a single nested resource
-  - [ ] **`GET /:id/:field/:id`:** read nested resource (simulate with `GET /:id/:field`, then `GET` field url)
-  - [ ] **`POST /:id/:field/:id`:** error -> use `PUT /:id/:field/:id` or `POST /:id/:field`
-  - [ ] **`PUT /:id/:field/:id`:** update nested resource
-  - [ ] **`DELETE /:id/:field/:id`:** delete nested resource
-- [ ] **`?`:** query parameters
-  - [ ] **`?field=filter`:** list `resource`s that match `filter` on `field`. Support
-    - [ ] `=` exact match
-    - [ ] `~=` one of
-    - [ ] `|=` exact match or starting with + `-` (namespacing)
-    - [ ] `^=` starts with
-    - [ ] `$=` ends with
-    - [ ] `*=` contains
-  - [ ] **`?fields=`:** partial response (filtered by `model.validate`)
-  - [ ] **`?limit=` and `?offset=`:** pagination (`limit` entries per call, `offset` entries skipped)
-  - [ ] **`?q=`:** search resources for query
-  - [ ] **`?method=`:** override http method with `method` (`GET /?method=POST` equals `POST /`)
-  - [ ] **`?suppress_response_codes=true`:** override response code with `200`, put response code in result
-- [ ] **`.:ext`:** resource serialization
-  - [ ] **`.json` / `Accept: application/json`:** (default) resources as json
-  - [ ] **`.xml` / `Accept: text/xml`:** resources as xml
-  - [ ] **`.yml` / `Accept: application/yaml`:** resources as yaml
+- [ ] _`/`:_ all resources
+  - [x] _`OPTIONS /`:_ list methods
+  - [x] _`GET /`:_ list resource urls
+  - [x] _`POST /`:_ create resource
+  - [ ] _`PUT /`:_ bulk update resources
+  - [ ] _`DELETE /`:_ delete all resources
+- [ ] _`/:id`:_ a single resource
+  - [x] _`GET /:id`:_ read resource
+  - [ ] _`POST /:id`:_ error -> use `PUT /:id` or `POST /`
+  - [x] _`PUT /:id`:_ update resource
+  - [x] _`DELETE /:id`:_ delete resource
+- [ ] _`/:id/:field`:_ all nested resources
+  - [ ] _`GET /:id/:field`:_ list nested resources (simulate with `GET /:id?fields=:field`)
+  - [ ] _`POST /:id/:field`:_ create nested resource (added to `:field` list)
+  - [ ] _`PUT /:id/:field`:_ bulk update nested resources
+  - [ ] _`DELETE /:id/:field`:_ delete all nested resources
+- [ ] _`/:id/:field/:id`:_ a single nested resource
+  - [ ] _`GET /:id/:field/:id`:_ read nested resource (simulate with `GET /:id/:field`, then `GET` field url)
+  - [ ] _`POST /:id/:field/:id`:_ error -> use `PUT /:id/:field/:id` or `POST /:id/:field`
+  - [ ] _`PUT /:id/:field/:id`:_ update nested resource
+  - [ ] _`DELETE /:id/:field/:id`:_ delete nested resource
+- [ ] _`?`:_ query parameters
+  - [ ] _`?field=filter`:_ list `resource`s that match `filter` on `field`. Support
+    - [ ] _`=`:_ exact match
+    - [ ] _`~=`:_ one of
+    - [ ] _`|=`:_ exact match or starting with + `-` (namespacing)
+    - [ ] _`^=`:_ starts with
+    - [ ] _`$=`:_ ends with
+    - [ ] _`*=`:_ contains
+  - [ ] _`?fields=`:_ partial response (filtered by `model.validate`)
+  - [ ] _`?limit=` and `?offset=`:_ pagination (`limit` entries per call, `offset` entries skipped)
+  - [ ] _`?q=`:_ search resources for query
+  - [ ] _`?method=`:_ override http method with `method` (`GET /?method=POST` equals `POST /`)
+  - [ ] _`?suppress_response_codes=true`:_ override response code with `200`, put response code in result
+- [ ] _`.:ext`:_ resource serialization
+  - [ ] _`.json` / `Accept: application/json`:_ (default) resources as json
+  - [ ] _`.xml` / `Accept: text/xml`:_ resources as xml
+  - [ ] _`.yml` / `Accept: application/yaml`:_ resources as yaml
 
 ## changelog
 
