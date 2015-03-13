@@ -1,6 +1,6 @@
 # express-persistent-resource
 
-[![Build Status](https://travis-ci.org/dominikschreiber/express-persistent-resource.svg?branch=master)](https://travis-ci.org/dominikschreiber/express-persistent-resource) [![Join the chat at https://gitter.im/dominikschreiber/express-persistent-resource](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dominikschreiber/express-persistent-resource?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://img.shields.io/travis/dominikschreiber/express-persistent-resource.svg?style=flat-square)](https://travis-ci.org/dominikschreiber/express-persistent-resource) [![Join the chat at https://gitter.im/dominikschreiber/express-persistent-resource](https://img.shields.io/badge/gitter-join%20chat-green.svg?style=flat-square)](https://gitter.im/dominikschreiber/express-persistent-resource?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 *express-persistent-resource* creates a full-featured CRUD resource (express) middleware that persists all information to a given CouchDB instance. It's as simple as
 
@@ -39,7 +39,7 @@ var express = require('express')
   , resource = require('express-persistent-resource')
   , couchdbInstance = 'your://couch.db/instance' // e.g. http://localhost:5984/awesome-project
   , app = express();
-  
+
 app.use('/api/v1/awesome', resource('awesome', couchdbInstance, {
    ...
 }));
@@ -88,6 +88,7 @@ Basic CRUD works (& is tested). It is planned to serve all features described in
   - [ ] _`PUT /:id/:field/:id`:_ update nested resource
   - [ ] _`DELETE /:id/:field/:id`:_ delete nested resource
 - [ ] _`?`:_ query parameters
+  - [ ] _`
   - [ ] _`?field=filter`:_ list `resource`s that match `filter` on `field`. Support
     - [ ] _`=`:_ exact match
     - [ ] _`~=`:_ one of
