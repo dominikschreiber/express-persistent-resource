@@ -101,9 +101,13 @@ Basic CRUD works (& is tested). It is planned to serve all features described in
   - [ ] _`?method=`:_ override http method with `method` (`GET /?method=POST` equals `POST /`)
   - [ ] _`?suppress_response_codes=true`:_ override response code with `200`, put response code in result
 - [ ] _`.:ext`:_ resource serialization
-  - [ ] _`.json` / `Accept: application/json`:_ (default) resources as json
-  - [ ] _`.xml` / `Accept: text/xml`:_ resources as xml
-  - [ ] _`.yml` / `Accept: application/yaml`:_ resources as yaml
+  - [ ] _`.json`:_ (default) resources as json
+  - [ ] _`.xml`:_ resources as xml
+  - [ ] _`.yml`:_ resources as yaml
+- [ ] _`Accept:`:_ resource serialization
+  - [x] _`*/json`:_ resources as json
+  - [x] _`*/xml`:_ resources as xml
+  - [ ] _`*/yml`:_ resources as yaml
 
 ## changelog
 
