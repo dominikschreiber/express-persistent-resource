@@ -112,6 +112,11 @@ Basic CRUD works (& is tested). It is planned to serve all features described in
 
 ## changelog
 
+### 0.0.4
+
+- `Accept: */json` + `Accept: */xml` based resource serialization
+- `GET /?include_docs` returns list of docs instead of urls
+
 ### 0.0.3
 
 - *fix:* fields strings with multiple nested objects (e.g. `foo:(bar,baz),goo:(g,le)`) are now handled correctly
