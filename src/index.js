@@ -11,6 +11,7 @@ module.exports = function(name, db, options) {
             id: configuration.id
         })
       , router = require('./router')(service, {
+            view: configuration.view,
             fields: configuration.fields
         })
       , middleware = require('express').Router();

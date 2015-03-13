@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/dominikschreiber/express-persistent-resource",
   "dependencies": {
+    "easyxml": "^1.0.0",
     "express": "^4.11.2",
     "lodash": "^3.2.0",
     "nano": "^6.0.2"

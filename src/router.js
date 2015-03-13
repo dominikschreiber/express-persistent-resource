@@ -1,12 +1,36 @@
 'use strict';
 
-module.exports = function(service) {
+module.exports = function(service, options) {
     var _ = require('lodash')
+      , configuration = _.defaults(options, {
+            view: ''
+        })
+      , EasyXml = require('easyxml')
+      , xml = new EasyXml({
+            singularizeChildren: true,
+            allowAttributes: true,
+            manifest: true,
+            rootElement: configuration.view
+        })
       , router = {};
     
+    function format(res, json) {
+        return {
+            xml: function() {
+                res.send(xml.render(json));
+            },
+            json: function() {
+                res.send(json);
+            },
+            default: function() {
+                res.send(json);
+            }
+        };
+    }
+    
     router.error = function(res, err, next) {
-        res.status(500)
-            .json(err);
+        res.status(500);
+        res.format(format(res, err));
         next(err);
     };
     
@@ -18,12 +42,14 @@ module.exports = function(service) {
      */
     router.list = function(req, res, next) {
         service.findAll(function(err, result) {
+            var message;
             if (err) {
                 router.error(res, err, next);
             } else {
-                res.json(_.map(result, function(id) {
+                message = _.map(result, function(id) {
                     return basePath(req, id);
-                }));
+                });
+                res.format(format(res, message));
                 next();
             }
         });
@@ -38,10 +64,12 @@ module.exports = function(service) {
      */
     router.read = function(req, res, next) {
         service.findById(req.params.id, function(err, result) {
+            var message;
             if (err) {
                 router.error(res, err, next);
             } else {
-                res.json(result);
+                message = result;
+                res.format(format(res, message));
                 next();
             }
         });
@@ -57,10 +85,12 @@ module.exports = function(service) {
     
     function save(body, req, res, next) {
         service.save(body, function(err, id) {
+            var message;
             if (err) {
                 router.error(res, err, next);
             } else {
-                res.json(basePath(req, id));
+                message = basePath(req, id);
+                res.format(format(res, message));
                 next();
             }
         });
@@ -80,10 +110,12 @@ module.exports = function(service) {
      */
     router.delete = function(req, res, next) {
         service.delete(req.params.id, function(err) {
+            var message;
             if (err) {
                 router.error(res, err, next);
             } else {
-                res.json(req.baseUrl);
+                message = req.baseUrl;
+                res.format(format(res, message));
                 next();
             }
         });
