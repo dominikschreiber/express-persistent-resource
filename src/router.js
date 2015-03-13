@@ -39,16 +39,26 @@ module.exports = function(service, options) {
      * as urls to the entries, e.g.
      * 
      * ['/api/v1/foo/1', '/api/v1/foo/2']
+     *
+     * if ?include_docs is set, lists whole docs instead, e.g.
+     *
+     * [{id:1,name:'foo'}, {id:2,name:'bar'}]
      */
     router.list = function(req, res, next) {
-        service.findAll(function(err, result) {
+        var shouldIncludeDocs = req.query && req.query.include_docs !== undefined;
+        
+        service.findAll(shouldIncludeDocs, function(err, result) {
             var message;
             if (err) {
                 router.error(res, err, next);
             } else {
-                message = _.map(result, function(id) {
-                    return basePath(req, id);
-                });
+                if (shouldIncludeDocs) {
+                    message = result;
+                } else {
+                    message = _.map(result, function(id) {
+                        return basePath(req, id);
+                    });
+                }
                 res.format(format(res, message));
                 next();
             }

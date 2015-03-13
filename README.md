@@ -88,7 +88,7 @@ Basic CRUD works (& is tested). It is planned to serve all features described in
   - [ ] _`PUT /:id/:field/:id`:_ update nested resource
   - [ ] _`DELETE /:id/:field/:id`:_ delete nested resource
 - [ ] _`?`:_ query parameters
-  - [ ] _`
+  - [ ] _`?include_docs`:_ when `GET /?include_docs`, list docs instead of urls
   - [ ] _`?field=filter`:_ list `resource`s that match `filter` on `field`. Support
     - [ ] _`=`:_ exact match
     - [ ] _`~=`:_ one of

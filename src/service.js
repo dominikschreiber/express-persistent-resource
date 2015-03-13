@@ -56,12 +56,16 @@ module.exports = function(db, options) {
     /**
      * finds all entries managed by this service
      */
-    service.findAll = function(next) {
+    service.findAll = function(shouldIncludeDocs, next) {
         db.view(configuration.view, 'findAll', function(err, result) {
             if (err) {
                 next(err);
             } else {
-                next(null, _.map(result.rows, pickPublicIdFromRow));
+                if (shouldIncludeDocs) {
+                    next(null, _.map(_.pluck(result.rows, 'value'), createPublicDoc));
+                } else {
+                    next(null, _.map(result.rows, pickPublicIdFromRow));
+                }
             }
         });
     };
@@ -90,10 +94,14 @@ module.exports = function(db, options) {
                 next(new Error('no ' + configuration.view + ' with id ' + id + ' found'));
             } else {
                 doc = result.rows[0].doc;
-                next(null, _.omit(_.extend(doc, { id: pickPublicIdFromId(doc._id) }), ['_id', '_rev']));
+                next(null, createPublicDoc(doc));
             }
         });
     };
+    
+    function createPublicDoc(doc) {
+        return _.omit(_.extend(doc, { id: pickPublicIdFromId(doc._id) }), ['_id', '_rev']);
+    }
 
     function createPrivateId(id) {
         return [configuration.view, id].join('-');

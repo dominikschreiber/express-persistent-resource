@@ -2,8 +2,12 @@
 
 var assert = require('assert')
   , mock = {
-        findAll: function(next) {
-            next(null, [1,2,3]);
+        findAll: function(shouldIncludeDocs, next) {
+            if (shouldIncludeDocs) {
+                next(null, [{id:1,name:'foo'}, {id:2,name:'bar'}, {id:3,name:'baz'}]);
+            } else {
+                next(null, [1,2,3]);
+            }
         },
         findById: function(id, next) {
             next(null, {id: id, content: 'foo'});
@@ -46,6 +50,18 @@ describe('router', function() {
                 format: function(e) { e.json(); },
                 send: function(e) {
                     assert.deepEqual(['/api/v1/test/1','/api/v1/test/2','/api/v1/test/3'], e);
+                }
+            }, done);
+        });
+        it('should respond with a list of docs when ?include_docs is set', function(done) {
+            router.list({
+                get: function() { return 'application/json'; },
+                baseUrl: '/api/v1/test',
+                query: {include_docs: true}
+            }, {
+                format: function(e) { e.json(); },
+                send: function(e) {
+                    assert.deepEqual([{id:1,name:'foo'}, {id:2,name:'bar'}, {id:3,name:'baz'}], e);
                 }
             }, done);
         });
