@@ -12,7 +12,7 @@ var assert = require('assert')
             next(null, data.id || 7);
         }
     }
-  , router = require('../src/router')(mock);
+  , router = require('../src/router')(mock, { view: 'test' });
 
 describe('router', function() {
     describe('#error(res,err,next)', function() {
@@ -23,7 +23,8 @@ describe('router', function() {
                         assert.equal(500, code);
                         return res;
                     },
-                    json: function(e) {
+                    format: function(e) { e.json(); }, 
+                    send: function(e) {
                         assert.equal(err, e);
                         return res;
                     }
@@ -39,9 +40,11 @@ describe('router', function() {
     describe('#list(req,res,next)', function() {
         it('should respond with a list of urls relative to /', function(done) {
             router.list({
+                get: function() { return 'application/json'; },
                 baseUrl: '/api/v1/test'
             }, {
-                json: function(e) {
+                format: function(e) { e.json(); },
+                send: function(e) {
                     assert.deepEqual(['/api/v1/test/1','/api/v1/test/2','/api/v1/test/3'], e);
                 }
             }, done);
@@ -51,10 +54,12 @@ describe('router', function() {
     describe('#create(req,res,next)', function() {
         it('should respond with the url of the newly created entry', function(done) {
             router.create({
+                get: function() { return 'application/json'; },
                 body: {foo: 'bar'},
                 baseUrl: '/api/v1/test'
             }, {
-                json: function(e) {
+                format: function(e) { e.json(); },
+                send: function(e) {
                     assert.equal('/api/v1/test/7', e);
                 }
             }, done);
@@ -64,9 +69,11 @@ describe('router', function() {
     describe('#read(req,res,next)', function() {
         it('should respond with the entry specified by id', function(done) {
             router.read({
+                get: function() { return 'application/json'; },
                 params: {id: 5}
             }, {
-                json: function(e) {
+                format: function(e) { e.json(); },
+                send: function(e) {
                     assert.deepEqual({id: 5, content: 'foo'}, e);
                 }
             }, done);
@@ -76,11 +83,13 @@ describe('router', function() {
     describe('#update(req,res,next)', function() {
         it('should respond with the url of the updated entry', function(done) {
             router.update({
+                get: function() { return 'application/json'; },
                 body: {goo: 'gle'},
                 params: {id: 5},
                 baseUrl: '/api/v1/test'
             }, {
-                json: function(e) {
+                format: function(e) { e.json(); },
+                send: function(e) {
                     assert.equal('/api/v1/test/5', e);
                 }
             }, done);
