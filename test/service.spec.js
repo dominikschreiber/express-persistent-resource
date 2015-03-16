@@ -89,11 +89,25 @@ describe('service', function() {
         });
     });
     
+    describe('#filter()', function() {
+        it('should return exact matched public ids when called with <field>=<value>', function() {
+            service.filter(false, [{
+                property: 'name',
+                match: '=',
+                filter: '1'
+            }], function(err, result) {
+                if (!err) {
+                    assert.deepEqual(['1'], result);
+                }
+            });
+        });
+    });
+    
     describe('#findById()', function() {
         it('should return the doc specified by id', function() {
             service.findById('1', function(err, result) {
                 if (!err) {
-                    assert.deepEqual({id: '1', name: '1'}, result);
+                    assert.equal({id: '1', name: '1'}, result);
                 } 
             });
         });

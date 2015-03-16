@@ -62,25 +62,31 @@ module.exports = function(db, options) {
     
     function findAll(shouldIncludeDocs, filters, next) {
         db.view(configuration.view, 'findAll', function(err, result) {
+            var docs;
             if (err) {
                 next(err);
             } else {
+                docs = model.filter(_.pluck(result.rows, 'value'), filters);
+                
                 if (shouldIncludeDocs) {
-                    next(null, _.map(_.pluck(result.rows, 'value'), createPublicDoc));
+                    next(null, _.map(docs, createPublicDoc));
                 } else {
-                    next(null, _.map(result.rows, pickPublicIdFromRow));
+                    next(null, _.map(docs, function(d) { return pickPublicIdFromId(d._id); } ));
                 }
             }
         });
     }
 
-    function pickPublicIdFromRow(row) {
-        return pickPublicIdFromId(row.value._id);
-    }
-
     function pickPublicIdFromId(_id) {
         return _id.slice((configuration.view + '-').length);
     }
+    
+    /**
+     *
+     */
+    service.filter = function(shouldIncludeDocs, filters, next) {
+        findAll(shouldIncludeDocs, filters, next);
+    };
 
     /**
      * finds the entry with the specified public id that is managed by this service

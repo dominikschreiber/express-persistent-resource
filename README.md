@@ -88,14 +88,14 @@ Basic CRUD works (& is tested). It is planned to serve all features described in
   - [ ] _`PUT /:id/:field/:id`:_ update nested resource
   - [ ] _`DELETE /:id/:field/:id`:_ delete nested resource
 - [ ] _`?`:_ query parameters
-  - [ ] _`?include_docs`:_ when `GET /?include_docs`, list docs instead of urls
-  - [ ] _`?field=filter`:_ list `resource`s that match `filter` on `field`. Support
-    - [ ] _`=`:_ exact match
-    - [ ] _`~=`:_ one of
-    - [ ] _`|=`:_ exact match or starting with + `-` (namespacing)
-    - [ ] _`^=`:_ starts with
-    - [ ] _`$=`:_ ends with
-    - [ ] _`*=`:_ contains
+  - [x] _`?include_docs`:_ when `GET /?include_docs`, list docs instead of urls
+  - [x] _`?field=filter`:_ list `resource`s that match `filter` on `field`. Support
+    - [x] _`=`:_ exact match
+    - [x] _`~=`:_ one of
+    - [x] _`|=`:_ exact match or starts with + `-` (namespacing)
+    - [x] _`^=`:_ starts with
+    - [x] _`$=`:_ ends with
+    - [x] _`*=`:_ contains
   - [ ] _`?fields=`:_ partial response (filtered by `model.validate`)
   - [ ] _`?limit=` and `?offset=`:_ pagination (`limit` entries per call, `offset` entries skipped)
   - [ ] _`?q=`:_ search resources for query

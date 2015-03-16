@@ -3,7 +3,8 @@
 module.exports = function(service, options) {
     var _ = require('lodash')
       , configuration = _.defaults(options, {
-            view: ''
+            view: '',
+            fields: ''
         })
       , EasyXml = require('easyxml')
       , xml = new EasyXml({
@@ -12,7 +13,14 @@ module.exports = function(service, options) {
             manifest: true,
             rootElement: configuration.view
         })
+      , model = require('./model')
       , router = {};
+    
+    (function init() {
+        if (typeof configuration.fields === 'string') {
+            configuration.fields = model.parse(configuration.fields);
+        }
+    })();
     
     function format(res, json) {
         return {
@@ -45,9 +53,18 @@ module.exports = function(service, options) {
      * [{id:1,name:'foo'}, {id:2,name:'bar'}]
      */
     router.list = function(req, res, next) {
-        var shouldIncludeDocs = req.query && req.query.include_docs !== undefined;
+        var shouldIncludeDocs = req.query && req.query.include_docs !== undefined
+          , filters = req.query && getFilters(req.query);
         
-        service.findAll(shouldIncludeDocs, function(err, result) {
+        if (_.isEmpty(filters)) {
+            service.findAll(shouldIncludeDocs, handleListResult(shouldIncludeDocs, req, res, next));
+        } else {
+            service.filter(shouldIncludeDocs, filters, handleListResult(shouldIncludeDocs, req, res, next));
+        }
+    };
+    
+    function handleListResult(shouldIncludeDocs, req, res, next) {
+        return function(err, result) {
             var message;
             if (err) {
                 router.error(res, err, next);
@@ -55,15 +72,41 @@ module.exports = function(service, options) {
                 if (shouldIncludeDocs) {
                     message = result;
                 } else {
-                    message = _.map(result, function(id) {
-                        return basePath(req, id);
-                    });
+                    message = _.map(result, function(id) { return basePath(req, id); });
                 }
                 res.format(format(res, message));
                 next();
             }
-        });
-    };
+        };
+    }
+    
+    function getFilters(query) {
+        return _.chain(query)
+            .pairs()
+            .map(function(param) {
+                return {
+                    property: param[0],
+                    match: '=',
+                    filter: param[1]
+                };
+            })
+            .union(_.chain(query)
+                    .pairs()
+                    .map(function(param) {
+                        return {
+                            property: param[0].slice(0,-1),
+                            match: param[0].slice(-1),
+                            filter: param[1]
+                        };
+                    })
+                    .value())
+            .filter(function(filter) {
+                return filter.property.length > 0
+                    && filter.filter !== ''
+                    && !_.isEmpty(model.validate(model.parse(filter.property), configuration.fields));
+            })
+            .value();
+    }
     
     function basePath(req, id) {
         return [req.baseUrl, id].join('/');
