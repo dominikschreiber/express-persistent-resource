@@ -51,3 +51,44 @@ exports.validate = function(doc, model) {
             }, {})
             .value();
 };
+
+exports.filter = function(docs, filters) {
+    if (!filters) { return docs; }
+
+    return _.filter(docs, matchesAllFilters(filters));
+};
+
+function matchesAllFilters(filters) {
+    return function(doc) {
+        return _.every(filters, matchesFilter(doc));
+    };
+}
+
+function matchesFilter(doc) {
+    return function(filter) {
+        return exports.matches(doc, filter);
+    };
+}
+
+exports.matches = function(doc, filter) {
+    var prop = doc[filter.property]
+      , val = filter.filter;
+
+    switch (filter.match) {
+        case '=':
+            return prop === val;
+        case '~':
+            return val.split(',').indexOf(prop) > -1;
+        case '|':
+            return prop === val
+                || prop.indexOf(val + '-') === 0;
+        case '*':
+            return prop.indexOf(val) > -1;
+        case '^':
+            return prop.indexOf(val) === 0;
+        case '$':
+            return prop.indexOf(val, prop.length - val.length) !== -1;
+        default:
+            return false;
+    }
+};

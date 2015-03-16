@@ -64,4 +64,70 @@ describe('model', function() {
             return JSON.stringify(model.validate(input.doc, input.model));
         });
     });
+    
+    describe('#matches(doc,filter)', function() {
+        it('should treat = as exact match', function() {
+            var matching = {name: 'foo'}
+              , notMatching = {name: 'bar'}
+              , filter = {property: 'name', match: '=', filter: 'foo'};
+            
+            assert.ok(model.matches(matching, filter));
+            assert.ok(!model.matches(notMatching, filter));
+        });
+        
+        it('should treat ~= as one of match', function() {
+            var matching = {name: 'foo'}
+              , alsoMatching = {name: 'bar'}
+              , notMatching = {name: 'baz'}
+              , filter = {property: 'name', match: '~', filter: 'foo,bar'};
+            
+            assert.ok(model.matches(matching, filter));
+            assert.ok(model.matches(alsoMatching, filter));
+            assert.ok(!model.matches(notMatching, filter));
+        });
+        
+        it('should treat |= as exact/startswith match', function() {
+            var matching = {name: 'foo'}
+              , alsoMatching = {name: 'foo-bar'}
+              , notMatching = {name: 'bar'}
+              , filter = {property: 'name', match: '|', filter: 'foo'};
+            
+            assert.ok(model.matches(matching, filter));
+            assert.ok(model.matches(alsoMatching, filter));
+            assert.ok(!model.matches(notMatching, filter));
+        });
+        
+        it('should treat *= as contains match', function() {
+            var matching = {name: 'foobar'}
+              , alsoMatching = {name: 'foobarbaz'}
+              , notMatching = {name: 'googargaz'}
+              , filter = {property: 'name', match: '*', filter: 'bar'};
+            
+            assert.ok(model.matches(matching, filter));
+            assert.ok(model.matches(alsoMatching, filter));
+            assert.ok(!model.matches(notMatching, filter));
+        });
+        
+        it('should treat ^= as startswith match', function() {
+            var matching = {name: 'foo'}
+              , alsoMatching = {name: 'furz'}
+              , notMatching = {name: 'goo'}
+              , filter = {property: 'name', match: '^', filter: 'f'};
+            
+            assert.ok(model.matches(matching, filter));
+            assert.ok(model.matches(alsoMatching, filter));
+            assert.ok(!model.matches(notMatching, filter));
+        });
+        
+        it('should treat $= as endwith match', function() {
+            var matching = {name: 'foobar'}
+              , alsoMatching = {name: 'barbar'}
+              , notMatching = {name: 'foo'}
+              , filter = {property: 'name', match: '$', filter: 'bar'};
+            
+            assert.ok(model.matches(matching, filter));
+            assert.ok(model.matches(alsoMatching, filter));
+            assert.ok(!model.matches(notMatching, filter));
+        });
+    });
 });
