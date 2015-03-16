@@ -57,6 +57,10 @@ module.exports = function(db, options) {
      * finds all entries managed by this service
      */
     service.findAll = function(shouldIncludeDocs, next) {
+        findAll(shouldIncludeDocs, undefined, next);
+    };
+    
+    function findAll(shouldIncludeDocs, filters, next) {
         db.view(configuration.view, 'findAll', function(err, result) {
             if (err) {
                 next(err);
@@ -68,7 +72,7 @@ module.exports = function(db, options) {
                 }
             }
         });
-    };
+    }
 
     function pickPublicIdFromRow(row) {
         return pickPublicIdFromId(row.value._id);
