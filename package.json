@@ -1,6 +1,6 @@
 {
   "name": "express-persistent-resource",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "RESTful resource middleware that handles all database stuff by itself. Just define the &fields= query string and go.",
   "main": "src/index.js",
   "scripts": {

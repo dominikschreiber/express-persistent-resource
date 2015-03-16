@@ -60,11 +60,7 @@ app.use('/api/v1/evenmore', resource('evenmore', couchdbInstance, {
     - `id`: function that determines how ids of this resource should look like. Is called with the incoming entry to create an id for it. Defaults to a substring of the sha256-hash of the entry.
     - `views`: additional map/reduce views given to the CouchDB service. May be removed in the future. See the [CouchDB Guide](http://guide.couchdb.org/draft/design.html#basic) for details (this property is merged into the `views` property of the design document).
 
-## current status
-
-Basic CRUD works (& is tested). It is planned to serve all features described in the Web API Design book.
-
-## planned features
+## features ([ ] planned, [x] implemented)
 
 - [ ] _`/`:_ all resources
   - [x] _`OPTIONS /`:_ list methods
@@ -111,6 +107,10 @@ Basic CRUD works (& is tested). It is planned to serve all features described in
   - [ ] _`*/yml`:_ resources as yaml
 
 ## changelog
+
+### 0.1.0
+
+- `GET /?field=filter` filters resources based on the given filter, allowing nested fields via a string for `model.parse`
 
 ### 0.0.4
 
