@@ -53,9 +53,17 @@ exports.validate = function(doc, model) {
 };
 
 exports.filter = function(docs, filters) {
-    if (!filters) { return docs; }
+    var parsedFilters;
+    
+    if (!filters) {
+        return docs;
+    } else {
+        parsedFilters = _.map(filters, function(filter) {
+            return _.extend(filter, {property: exports.parse(filter.property)});
+        });
+    }
 
-    return _.filter(docs, matchesAllFilters(filters));
+    return _.filter(docs, matchesAllFilters(parsedFilters));
 };
 
 function matchesAllFilters(filters) {
@@ -65,8 +73,22 @@ function matchesAllFilters(filters) {
 }
 
 function matchesFilter(doc) {
-    return function(filter) {
-        return exports.matches(doc, filter);
+    return function matches(filter) {
+        var key
+          , prop;
+        
+        if (typeof filter.property === 'string') {
+            return exports.matches(doc, filter);
+        } else {
+            key = _.keys(filter.property)[0];
+            prop = filter.property[key];
+            
+            if (prop === true) {
+                return exports.matches(doc, _.extend(filter, { property: key }));
+            } else {
+                return matchesFilter(doc[key])(_.extend(filter, { property: prop }));
+            }
+        }
     };
 }
 

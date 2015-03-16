@@ -82,7 +82,8 @@ module.exports = function(db, options) {
     }
     
     /**
-     *
+     * finds entries matching `filters` (see model.filter),
+     * includes docs if `shouldIncludeDocs` is set
      */
     service.filter = function(shouldIncludeDocs, filters, next) {
         findAll(shouldIncludeDocs, filters, next);

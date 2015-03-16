@@ -130,4 +130,28 @@ describe('model', function() {
             assert.ok(!model.matches(notMatching, filter));
         });
     });
+    
+    describe('#filter(docs,filters)', function() {
+        it('should apply simple filters to all docs', function() {
+            var docs = [{name: 'foo'}, {name: 'bar'}]
+              , filters = [{property: 'name', match: '=', filter: 'foo'}];
+            
+            assert.deepEqual([{name: 'foo'}], model.filter(docs, filters));
+        });
+        
+        it('should apply nested filters to all docs', function() {
+            var docs = [{name: {firstname: 'foo', lastname: 'bar'}}, {name: {firstname: 'goo', lastname: 'gle'}}]
+              , filters = [{property: 'name:(firstname)', match: '=', filter: 'foo'}];
+            
+            assert.deepEqual([{name: {firstname: 'foo', lastname: 'bar'}}], model.filter(docs, filters));
+        });
+        
+        it('should apply multiple filters AND-connected to all docs', function() {
+            var docs = [{name: {firstname: 'foo', lastname: 'bar'}}, {name: {firstname: 'foo', lastname: 'gle'}}]
+              , filters = [{property: 'name:(firstname)', match: '=', filter: 'foo'},
+                           {property: 'name:(lastname)', match: '=', filter: 'bar'}];
+            
+            assert.deepEqual([{name: {firstname: 'foo', lastname: 'bar'}}], model.filter(docs, filters));
+        })
+    });
 });
