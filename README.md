@@ -108,6 +108,10 @@ app.use('/api/v1/evenmore', resource('evenmore', couchdbInstance, {
 
 ## changelog
 
+### 0.1.1
+
+- `DELETE /:id Accept:application/json` fixed, returned `/` instead of `"/"`
+
 ### 0.1.0
 
 - `GET /?field=filter` filters resources based on the given filter, allowing nested fields via a string for `model.parse`
