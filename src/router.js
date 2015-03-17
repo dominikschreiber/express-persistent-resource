@@ -28,10 +28,10 @@ module.exports = function(service, options) {
                 res.send(xml.render(json));
             },
             json: function() {
-                res.send(json);
+                res.json(json);
             },
             default: function() {
-                res.send(json);
+                res.json(json);
             }
         };
     }
