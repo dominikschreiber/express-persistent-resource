@@ -1,6 +1,6 @@
 # express-persistent-resource
 
-[![Build Status](https://img.shields.io/travis/dominikschreiber/express-persistent-resource.svg?style=flat-square)](https://travis-ci.org/dominikschreiber/express-persistent-resource) [![Join the chat at https://gitter.im/dominikschreiber/express-persistent-resource](https://img.shields.io/badge/gitter-join%20chat-green.svg?style=flat-square)](https://gitter.im/dominikschreiber/express-persistent-resource?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://img.shields.io/travis/dominikschreiber/express-persistent-resource.svg?style=flat-square)](https://travis-ci.org/dominikschreiber/express-persistent-resource) ![Version](https://img.shields.io/npm/v/express-persistent-resource.svg?style=flat-square)  ![Downloads](https://img.shields.io/npm/dm/express-persistent-resource.svg?style=flat-square) ![License](https://img.shields.io/npm/l/express-persistent-resource.svg?style=flat-square) [![Join the chat at https://gitter.im/dominikschreiber/express-persistent-resource](https://img.shields.io/badge/gitter-join%20chat-green.svg?style=flat-square)](https://gitter.im/dominikschreiber/express-persistent-resource?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 *express-persistent-resource* creates a full-featured CRUD resource (express) middleware that persists all information to a given CouchDB instance. It's as simple as
 
