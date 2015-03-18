@@ -51,7 +51,7 @@ describe('router', function() {
                         assert.equal(500, code);
                         return res;
                     },
-                    send: function(e) {
+                    json: function(e) {
                         assert.equal(err, e);
                         return res;
                     }
@@ -69,7 +69,7 @@ describe('router', function() {
         it('should respond with a list of urls relative to /', function(done) {
             var req = withCommonProperties({})
               , res = withJsonFormatter({
-                    send: function(e) {
+                    json: function(e) {
                         assert.deepEqual(_.map(resources, resourceToUrl), e);
                     }
                 });
@@ -82,7 +82,7 @@ describe('router', function() {
                     query: {include_docs: true}
                 })
               , res = withJsonFormatter({
-                    send: function(e) {
+                    json: function(e) {
                         assert.deepEqual(resources, e);
                     }
                 });
@@ -95,7 +95,7 @@ describe('router', function() {
                     query: {name: 'foo'}
                 })
               , res = withJsonFormatter({
-                    send: function(e) {
+                    json: function(e) {
                         assert.deepEqual(_.chain(resources)
                                          .filter(function(r) { return r.name === 'foo'; })
                                          .map(resourceToUrl)
@@ -113,7 +113,7 @@ describe('router', function() {
                     body: {foo: 'bar'}
                 })
               , res = withJsonFormatter({
-                    send: function(e) {
+                    json: function(e) {
                         assert.equal(baseurl + '/7', e);
                     }
                 });
@@ -128,7 +128,7 @@ describe('router', function() {
                     params: {id: 5}
                 })
               , res = withJsonFormatter({
-                    send: function(e) {
+                    json: function(e) {
                         assert.deepEqual({id: 5, name: 'foo'}, e);
                     }
                 });
@@ -144,7 +144,7 @@ describe('router', function() {
                     params: {id: 5}
                 })
               , res = withJsonFormatter({
-                    send: function(e) {
+                    json: function(e) {
                         assert.equal(baseurl + '/5', e);
                     }
                 });
