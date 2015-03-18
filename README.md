@@ -22,7 +22,7 @@ PUT /bread/:id => update of the single bread, gives the url of the updated bread
 DELETE /bread/:id => deletes the single bread
 ```
 
-as well as advanced features like *fields selection* (tbd) and *pagination* (tbd) as described in [Web API Design &ndash; Crafting Interfaces that Developers Love](http://apigee.com/about/resources/ebooks/web-api-design).
+as well as advanced features like *fields selection* and *pagination* (tbd) as described in [Web API Design &ndash; Crafting Interfaces that Developers Love](http://apigee.com/about/resources/ebooks/web-api-design).
 
 ## getting started
 
@@ -92,7 +92,7 @@ app.use('/api/v1/evenmore', resource('evenmore', couchdbInstance, {
     - [x] _`^=`:_ starts with
     - [x] _`$=`:_ ends with
     - [x] _`*=`:_ contains
-  - [ ] _`?fields=`:_ partial response (filtered by `model.validate`)
+  - [x] _`?fields=`:_ partial response (filtered by `model.validate`)
   - [ ] _`?limit=` and `?offset=`:_ pagination (`limit` entries per call, `offset` entries skipped)
   - [ ] _`?q=`:_ search resources for query
   - [ ] _`?method=`:_ override http method with `method` (`GET /?method=POST` equals `POST /`)
@@ -108,18 +108,22 @@ app.use('/api/v1/evenmore', resource('evenmore', couchdbInstance, {
 
 ## changelog
 
+### 0.2.0
+
+- *feature:* `GET /?fields=<fields>&include_docs` returns result subsets of only `<fields>`
+
 ### 0.1.1
 
-- `DELETE /:id Accept:application/json` fixed, returned `/` instead of `"/"`
+- *fix:* `DELETE /:id Accept:application/json` returns `"/"` instead of `/` now
 
 ### 0.1.0
 
-- `GET /?field=filter` filters resources based on the given filter, allowing nested fields via a string for `model.parse`
+- *feature:* `GET /?field=filter` filters resources based on the given filter, allowing nested fields via a string for `model.parse`
 
 ### 0.0.4
 
-- `Accept: */json` + `Accept: */xml` based resource serialization
-- `GET /?include_docs` returns list of docs instead of urls
+- *feature:* `Accept: */json` + `Accept: */xml` based resource serialization
+- *feature:* `GET /?include_docs` returns list of docs instead of urls
 
 ### 0.0.3
 
@@ -127,14 +131,14 @@ app.use('/api/v1/evenmore', resource('evenmore', couchdbInstance, {
 
 ### 0.0.2
 
-- `DELETE /:id` deletes the document specified by `:id`, returns url of the resource mount point (e.g. `/api/v1/cat`)
+- *feature:* `DELETE /:id` deletes the document specified by `:id`, returns url of the resource mount point (e.g. `/api/v1/cat`)
 
 ### 0.0.1
 
-- `GET /` returns list of urls relative to `/` (e.g. when mounted at `/api/v1/cat`: `['/api/v1/cat/foo','/api/v1/cat/bar']`)
-- `POST /` creates a new document, returns url of that document (e.g. `/api/v1/cat/baz`)
-- `GET /:id` returns the document specified by `:id`
-- `PUT /:id` updates the document specified by `:id`, returns url of the updated document (e.g. `/api/v1/cat/baz`)
+- *feature:* `GET /` returns list of urls relative to `/` (e.g. when mounted at `/api/v1/cat`: `['/api/v1/cat/foo','/api/v1/cat/bar']`)
+- *feature:* `POST /` creates a new document, returns url of that document (e.g. `/api/v1/cat/baz`)
+- *feature:* `GET /:id` returns the document specified by `:id`
+- *feature:* `PUT /:id` updates the document specified by `:id`, returns url of the updated document (e.g. `/api/v1/cat/baz`)
 
 ## license
 
