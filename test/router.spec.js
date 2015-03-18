@@ -1,21 +1,31 @@
 'use strict';
 
 var assert = require('assert')
+  , model = require('../src/model')
   , _ = require('lodash')
   , resource = 'test'
   , baseurl = '/api/v1/' + resource
-  , model = 'name'
+  , fields = 'name'
   , resources = [{id:1,name:'foo'}, {id:2,name:'bar'}, {id:3,name:'baz'}]
   , mock = {
         findAll: function(options, next) {
-            var r = (_.isEmpty(options.filters)) ?
-                resources :
-                _.filter(resources, function(r) { return _.every(options.filters, function(f) { return r[f.property] == f.filter; }); });
-            if (options.shouldIncludeDocs) {
-                next(null, r);
-            } else {
-                next(null, _.pluck(r, 'id'));
+            var r = resources, fields;
+            
+            if (options.filters !== undefined) {
+                // only = matching in mock
+                r = _.filter(r, function(re) { return _.every(options.filters, function(f) { return re[f.property] == f.filter }) });
             }
+            
+            if (options.fields !== undefined) {
+                fields = model.parse(options.fields);
+                r = _.map(r, function(doc) { return model.validate(doc, fields); });
+            }
+            
+            if (!options.shouldIncludeDocs) {
+                r = _.pluck(r, 'id');
+            }
+            
+            next(null, r);
         },
         findById: function(id, next) {
             next(null, _.filter(resources, function(r) { return r.id === id; })[0] || {id: id, name: 'foo'});
@@ -24,7 +34,7 @@ var assert = require('assert')
             next(null, data.id || 7);
         }
     }
-  , router = require('../src/router')(mock, { view: resource, fields: model });
+  , router = require('../src/router')(mock, { view: resource, fields: fields });
 
 function withJsonFormatter(res) {
     return _.extend(res, { format: function(e) { e.json(); } });
@@ -100,6 +110,19 @@ describe('router', function() {
                                          .map(resourceToUrl)
                                          .value(), e);
                     }  
+                });
+            
+            router.list(req, res, done);
+        });
+        
+        it('should respond with a result subset list when ?fields=<fields> is set', function(done) {
+            var req = withCommonProperties({
+                    query: {fields: 'name', include_docs: true}
+                })
+              , res = withJsonFormatter({
+                    json: function(e) {
+                        assert.deepEqual(_.map(resources, function(r) { return {name: r.name} }), e);
+                    }
                 });
             
             router.list(req, res, done);

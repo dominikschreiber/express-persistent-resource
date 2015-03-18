@@ -4,9 +4,9 @@ var assert = require('assert')
   , _ = require('lodash')
   , resource = 'resource'
   , resources = [
-        {_id: resource + '-1', _rev: '1', name: '1'},
-        {_id: resource + '-2', _rev: '1', name: '2'},
-        {_id: resource + '-3', _rev: '1', name: '3'}
+        {_id: resource + '-1', _rev: '1', name: '1', nested: {foo: 'nested-1', bar: 'nested-2'}},
+        {_id: resource + '-2', _rev: '1', name: '2', nested: {foo: 'nested-3', bar: 'nested-4'}},
+        {_id: resource + '-3', _rev: '1', name: '3', nested: {foo: 'nested-5', bar: 'nested-6'}}
     ]
   , mock = {
         get: function(id, next) {
@@ -83,11 +83,9 @@ describe('service', function() {
                 shouldIncludeDocs: true
             }, function(err, result) {
                 if (!err) {
-                    assert.deepEqual([
-                        {id: '1', name: '1'},
-                        {id: '2', name: '2'},
-                        {id: '3', name: '3'}
-                    ], result);
+                    assert.deepEqual(_.map(resources, function(r) {
+                        return _.extend({id: r._id.slice(r._id.indexOf('-') + 1)}, _.omit(r, ['_id', '_rev']))
+                    }), result);
                 } 
             });
         });
@@ -106,6 +104,30 @@ describe('service', function() {
                 }
             });
         });
+        
+        it('should return a result subset when called with fields=<fields>', function() {
+            service.findAll({
+                shouldIncludeDocs: true,
+                fields: 'name'
+            }, function(err, result) {
+                if (!err) {
+                    assert.deepEqual(_.map(resources, function(r) { return {name: r.name}; }), result);
+                }
+            });
+        });
+        
+        it('should return a result subset when called with fields=<fields> where <fields> is nested', function() {
+            service.findAll({
+                shouldIncludeDocs: true,
+                fields: 'nested:(foo,bar)'
+            }, function(err, result) {
+                if (!err) {
+                    assert.deepEqual(_.map(resources, function(r) {
+                        return {nested: {foo: r.nested.foo, bar: r.nested.bar}};
+                    }), result);
+                }
+            });
+        })
     });
     
     describe('#findById()', function() {

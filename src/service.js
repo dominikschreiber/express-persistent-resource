@@ -54,41 +54,48 @@ module.exports = function(db, options) {
     }
 
     /**
-     * finds all entries managed by this service
+     * finds all entries managed by this service. allows options
+     *
+     * options = {
+     *   shouldIncludeDocs: false // => if true, return full docs instead of ids
+     *   filters: undefined // => if [{property, match, filter}] filters docs by these
+     * }
      */
     service.findAll = function(options, next) {
-        findAll(options, next);
-    };
-    
-    function findAll(options, next) {
+        _.defaults(options, {
+            shouldIncludeDocs: undefined,
+            filters: undefined,
+            fields: undefined
+        });
         db.view(configuration.view, 'findAll', function(err, result) {
-            var docs;
+            var docs, fields;
             if (err) {
                 next(err);
             } else {
-                docs = model.filter(_.pluck(result.rows, 'value'), options.filters);
+                docs = _.map(_.pluck(result.rows, 'value'), createPublicDoc);
                 
-                if (options.shouldIncludeDocs) {
-                    next(null, _.map(docs, createPublicDoc));
-                } else {
-                    next(null, _.map(docs, function(d) { return pickPublicIdFromId(d._id); } ));
+                if (options.filters !== undefined) {
+                    docs = model.filter(docs, options.filters);
                 }
+                
+                if (options.fields !== undefined && options.shouldIncludeDocs) {
+                    fields = (_.isObject(options.fields)) ? options.fields : model.parse(options.fields);
+                    docs = _.map(docs, function(doc) { return model.validate(doc, fields); });
+                }
+                
+                if (!options.shouldIncludeDocs) {
+                    docs = _.pluck(docs, 'id');
+                }
+                
+                next(null, docs);
             }
         });
-    }
-
+    };
+    
     function pickPublicIdFromId(_id) {
         return _id.slice((configuration.view + '-').length);
     }
     
-    /**
-     * finds entries matching `filters` (see model.filter),
-     * includes docs if `shouldIncludeDocs` is set
-     */
-    service.filter = function(options, next) {
-        findAll(options, next);
-    };
-
     /**
      * finds the entry with the specified public id that is managed by this service
      */

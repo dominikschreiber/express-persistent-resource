@@ -54,11 +54,13 @@ module.exports = function(service, options) {
      */
     router.list = function(req, res, next) {
         var shouldIncludeDocs = req.query && req.query.include_docs !== undefined
-          , filters = req.query && getFilters(req.query);
+          , filters = (req.query) ? getFilters(req.query) : undefined
+          , fields = (req.query) ? req.query.fields : undefined;
         
         service.findAll({
             shouldIncludeDocs: shouldIncludeDocs,
-            filters: (_.isEmpty(filters)) ? undefined : filters
+            filters: (_.isEmpty(filters)) ? undefined : filters,
+            fields: fields
         }, handleListResult(shouldIncludeDocs, req, res, next));
     };
     
