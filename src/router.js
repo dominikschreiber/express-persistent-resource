@@ -57,10 +57,11 @@ module.exports = function(service, options) {
           , filters = (req.query) ? getFilters(req.query) : undefined
           , fields = (req.query) ? req.query.fields : undefined;
         
-        service.findAll({
+        service.find({
             shouldIncludeDocs: shouldIncludeDocs,
             filters: (_.isEmpty(filters)) ? undefined : filters,
-            fields: fields
+            fields: fields,
+            id: false
         }, handleListResult(shouldIncludeDocs, req, res, next));
     };
     
@@ -117,7 +118,14 @@ module.exports = function(service, options) {
      * reads the resource specified by req.params.id
      */
     router.read = function(req, res, next) {
-        service.findById(req.params.id, function(err, result) {
+        var options = {
+            id: req.params.id
+        };
+        if (req.query && req.query.fields) {
+            options.fields = req.query.fields;
+        }
+        
+        service.find(options, function(err, result) {
             var message;
             if (err) {
                 router.error(res, err, next);

@@ -54,68 +54,99 @@ module.exports = function(db, options) {
     }
 
     /**
-     * finds all entries managed by this service. allows options
+     * finds entries managed by this service. allows options
      *
      * options = {
-     *   shouldIncludeDocs: false // => if true, return full docs instead of ids
-     *   filters: undefined // => if [{property, match, filter}] filters docs by these
+     *     shouldIncludeDocs: false // => if true, return full docs instead of ids
+     *   , filters: undefined // => if [{property, match, filter}] filters docs by these
+     *   , fields: undefined // => if fields string return subsets matching fields
+     *   , id: undefined // => if public id, return single object
      * }
      */
-    service.findAll = function(options, next) {
+    service.find = function(options, next) {
+        var viewOptions;
+        
         _.defaults(options, {
             shouldIncludeDocs: undefined,
             filters: undefined,
-            fields: undefined
+            fields: undefined,
+            id: undefined
         });
-        db.view(configuration.view, 'findAll', function(err, result) {
-            var docs, fields;
+        
+        viewOptions = {
+            include_docs: options.key || options.shouldIncludeDocs
+        };
+        if (options.id !== undefined) {
+            _.extend(viewOptions, { key: createPrivateId(options.id) });
+        }
+        
+        db.view(configuration.view, 'findAll', {
+            include_docs: options.id || options.shouldIncludeDocs,
+        }, function(err, result) {
+            var docs;
             if (err) {
                 next(err);
             } else {
-                docs = _.map(_.pluck(result.rows, 'value'), createPublicDoc);
+                docs = fromViewResult(result.rows);
                 
-                if (options.filters !== undefined) {
-                    docs = model.filter(docs, options.filters);
-                }
-                
-                if (options.fields !== undefined && options.shouldIncludeDocs) {
-                    fields = (_.isObject(options.fields)) ? options.fields : model.parse(options.fields);
-                    docs = _.map(docs, function(doc) { return model.validate(doc, fields); });
-                }
-                
-                if (!options.shouldIncludeDocs) {
-                    docs = _.pluck(docs, 'id');
-                }
+                docs = applySingleId(docs, options.id);
+                docs = applyFilters(docs, options.filters);
+                docs = applyFields(docs, options.fields);
+                docs = applyPickIds(docs, !options.id && !options.shouldIncludeDocs);
                 
                 next(null, docs);
             }
         });
     };
     
+    function fromViewResult(rows) {
+        return _.map(_.pluck(rows, 'value'), createPublicDoc);
+    }
+    
+    function applySingleId(docs, id) {
+        if (id) {
+            if (docs.length > 0) {
+                return docs[0];
+            }
+        }
+        return docs;
+    }
+    
+    function applyFilters(docs, filters) {
+        if (filters) {
+            if (_.isObject(docs)) {
+                return docs;
+            } else {
+                return model.filter(docs, filters);
+            }
+        }
+        return docs;
+    }
+    
+    function applyFields(docs, fields) {
+        var parsed;
+        if (fields) {
+            parsed = (_.isObject(fields)) ? fields : model.parse(fields);
+            if (_.isObject(docs)) {
+                return model.validate(docs, parsed);
+            } else {
+                return _.map(docs, function(d) { return model.validate(d, parsed); });
+            }
+        }
+        return docs;
+            
+    }
+    
+    function applyPickIds(docs, shouldApply) {
+        if (shouldApply) {
+            return _.pluck(docs, 'id');
+        }
+        return docs;
+    }
+    
     function pickPublicIdFromId(_id) {
         return _id.slice((configuration.view + '-').length);
     }
-    
-    /**
-     * finds the entry with the specified public id that is managed by this service
-     */
-    service.findById = function(id, next) {
-        db.view(configuration.view, 'findAll', {
-            key: createPrivateId(id),
-            include_docs: true
-        }, function(err, result) {
-            var doc;
-
-            if (err) {
-                next(err);
-            } else if (_.isEmpty(result.rows)) {
-                next(new Error('no ' + configuration.view + ' with id ' + id + ' found'));
-            } else {
-                doc = result.rows[0].doc;
-                next(null, createPublicDoc(doc));
-            }
-        });
-    };
     
     function createPublicDoc(doc) {
         return _.omit(_.extend(doc, { id: pickPublicIdFromId(doc._id) }), ['_id', '_rev']);

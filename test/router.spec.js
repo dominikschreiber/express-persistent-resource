@@ -8,27 +8,39 @@ var assert = require('assert')
   , fields = 'name'
   , resources = [{id:1,name:'foo'}, {id:2,name:'bar'}, {id:3,name:'baz'}]
   , mock = {
-        findAll: function(options, next) {
-            var r = resources, fields;
-            
-            if (options.filters !== undefined) {
-                // only = matching in mock
-                r = _.filter(r, function(re) { return _.every(options.filters, function(f) { return re[f.property] == f.filter }) });
-            }
-            
-            if (options.fields !== undefined) {
-                fields = model.parse(options.fields);
-                r = _.map(r, function(doc) { return model.validate(doc, fields); });
-            }
-            
-            if (!options.shouldIncludeDocs) {
-                r = _.pluck(r, 'id');
-            }
-            
-            next(null, r);
-        },
-        findById: function(id, next) {
-            next(null, _.filter(resources, function(r) { return r.id === id; })[0] || {id: id, name: 'foo'});
+        find: function(options, next) {
+            console.log(options);
+            if (_.isEqual(options, {
+                    shouldIncludeDocs: undefined,
+                    filters: undefined,
+                    fields: undefined,
+                    id: false
+                })) { next(null, _.pluck(resources, 'id')); }
+            if (_.isEqual(options, {
+                    shouldIncludeDocs: true,
+                    filters: undefined,
+                    fields: undefined,
+                    id: false
+            })) { next(null, resources); }
+            if (_.isEqual(options, {
+                    shouldIncludeDocs: false,
+                    filters: [{property: 'name', match: '=', filter: 'foo'}],
+                    fields: undefined,
+                    id: false
+            })) { next(null, [resources[0].id]); }
+            if (_.isEqual(options, {
+                    shouldIncludeDocs: true,
+                    filters: undefined,
+                    fields: 'name',
+                    id: false
+            })) { next(null, _.map(resources, function(r) { return {name: r.name}; })); }
+            if (_.isEqual(options, {
+                    id: 2
+            })) { next(null, resources[1]); }
+            if (_.isEqual(options, {
+                    id: 2,
+                    fields: 'name'
+            })) { next(null, {name: resources[1].name}); }
         },
         save: function(data, next) {
             next(null, data.id || 7);
@@ -145,29 +157,43 @@ describe('router', function() {
     });
     
     describe('#read(req,res,next)', function() {
-        it('should respond with the entry specified by id', function(done) {
+        it('should respond with the entry specified by :id', function(done) {
             var req = withCommonProperties({
-                    params: {id: 5}
+                    params: {id: 2}
                 })
               , res = withJsonFormatter({
                     json: function(e) {
-                        assert.deepEqual({id: 5, name: 'foo'}, e);
+                        assert.deepEqual(resources[1], e);
                     }
                 });
             
             router.read(req, res, done);
         });
+        
+        it('should respond with a entry subset when called with ?fields=<fields>', function(done) {
+            var req = withCommonProperties({
+                    params: {id: 2},
+                    query: {fields: 'name'}
+                })
+              , res = withJsonFormatter({
+                    json: function(e) {
+                        assert.deepEqual({name: resources[1].name}, e);
+                    }  
+                });
+            
+            router.read(req, res, done);
+        })
     });
     
     describe('#update(req,res,next)', function() {
         it('should respond with the url of the updated entry', function(done) {
             var req = withCommonProperties({
                     body: {goo: 'gle'},
-                    params: {id: 5}
+                    params: {id: 3}
                 })
               , res = withJsonFormatter({
                     json: function(e) {
-                        assert.equal(baseurl + '/5', e);
+                        assert.equal(baseurl + '/3', e);
                     }
                 });
             

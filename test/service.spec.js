@@ -67,9 +67,9 @@ var assert = require('assert')
   , service = require('../src/service')(mock, options);
 
 describe('service', function() {
-    describe('#findAll()', function() {
+    describe('#find()', function() {
         it('should return all public ids when called with shouldIncludeDocs=false', function() {
-            service.findAll({
+            service.find({
                 shouldIncludeDocs: false
             }, function(err, result) {
                 if (!err) {
@@ -79,7 +79,7 @@ describe('service', function() {
         });
         
         it('should return all docs when called with shouldIncludeDocs=true', function() {
-            service.findAll({
+            service.find({
                 shouldIncludeDocs: true
             }, function(err, result) {
                 if (!err) {
@@ -91,7 +91,7 @@ describe('service', function() {
         });
         
         it('should return exact matched public ids when called with <field>=<value>', function() {
-            service.findAll({
+            service.find({
                 shouldIncludeDocs: false,
                 filters: [{
                     property: 'name',
@@ -106,7 +106,7 @@ describe('service', function() {
         });
         
         it('should return a result subset when called with fields=<fields>', function() {
-            service.findAll({
+            service.find({
                 shouldIncludeDocs: true,
                 fields: 'name'
             }, function(err, result) {
@@ -117,7 +117,7 @@ describe('service', function() {
         });
         
         it('should return a result subset when called with fields=<fields> where <fields> is nested', function() {
-            service.findAll({
+            service.find({
                 shouldIncludeDocs: true,
                 fields: 'nested:(foo,bar)'
             }, function(err, result) {
@@ -127,12 +127,10 @@ describe('service', function() {
                     }), result);
                 }
             });
-        })
-    });
-    
-    describe('#findById()', function() {
+        });
+        
         it('should return the doc specified by id', function() {
-            service.findById('1', function(err, result) {
+            service.find({id: '1'}, function(err, result) {
                 if (!err) {
                     assert.equal({id: '1', name: '1'}, result);
                 } 
