@@ -108,6 +108,10 @@ app.use('/api/v1/evenmore', resource('evenmore', couchdbInstance, {
 
 ## changelog
 
+### 0.2.1
+
+- *feature:* `GET /:id?fields=<fields>` returns subset of `/:id` matching `<fields>`
+
 ### 0.2.0
 
 - *feature:* `GET /?fields=<fields>&include_docs` returns result subsets of only `<fields>`
