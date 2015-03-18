@@ -69,7 +69,9 @@ var assert = require('assert')
 describe('service', function() {
     describe('#findAll()', function() {
         it('should return all public ids when called with shouldIncludeDocs=false', function() {
-            service.findAll(false, function(err, result) {
+            service.findAll({
+                shouldIncludeDocs: false
+            }, function(err, result) {
                 if (!err) {
                     assert.deepEqual(['1', '2', '3'], result);
                 }
@@ -77,7 +79,9 @@ describe('service', function() {
         });
         
         it('should return all docs when called with shouldIncludeDocs=true', function() {
-            service.findAll(true, function(err, result) {
+            service.findAll({
+                shouldIncludeDocs: true
+            }, function(err, result) {
                 if (!err) {
                     assert.deepEqual([
                         {id: '1', name: '1'},
@@ -87,15 +91,16 @@ describe('service', function() {
                 } 
             });
         });
-    });
-    
-    describe('#filter()', function() {
+        
         it('should return exact matched public ids when called with <field>=<value>', function() {
-            service.filter(false, [{
-                property: 'name',
-                match: '=',
-                filter: '1'
-            }], function(err, result) {
+            service.findAll({
+                shouldIncludeDocs: false,
+                filters: [{
+                    property: 'name',
+                    match: '=',
+                    filter: '1'
+                }]
+            }, function(err, result) {
                 if (!err) {
                     assert.deepEqual(['1'], result);
                 }

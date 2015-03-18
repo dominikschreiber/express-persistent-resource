@@ -56,11 +56,10 @@ module.exports = function(service, options) {
         var shouldIncludeDocs = req.query && req.query.include_docs !== undefined
           , filters = req.query && getFilters(req.query);
         
-        if (_.isEmpty(filters)) {
-            service.findAll(shouldIncludeDocs, handleListResult(shouldIncludeDocs, req, res, next));
-        } else {
-            service.filter(shouldIncludeDocs, filters, handleListResult(shouldIncludeDocs, req, res, next));
-        }
+        service.findAll({
+            shouldIncludeDocs: shouldIncludeDocs,
+            filters: (_.isEmpty(filters)) ? undefined : filters
+        }, handleListResult(shouldIncludeDocs, req, res, next));
     };
     
     function handleListResult(shouldIncludeDocs, req, res, next) {

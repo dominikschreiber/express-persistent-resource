@@ -56,19 +56,19 @@ module.exports = function(db, options) {
     /**
      * finds all entries managed by this service
      */
-    service.findAll = function(shouldIncludeDocs, next) {
-        findAll(shouldIncludeDocs, undefined, next);
+    service.findAll = function(options, next) {
+        findAll(options, next);
     };
     
-    function findAll(shouldIncludeDocs, filters, next) {
+    function findAll(options, next) {
         db.view(configuration.view, 'findAll', function(err, result) {
             var docs;
             if (err) {
                 next(err);
             } else {
-                docs = model.filter(_.pluck(result.rows, 'value'), filters);
+                docs = model.filter(_.pluck(result.rows, 'value'), options.filters);
                 
-                if (shouldIncludeDocs) {
+                if (options.shouldIncludeDocs) {
                     next(null, _.map(docs, createPublicDoc));
                 } else {
                     next(null, _.map(docs, function(d) { return pickPublicIdFromId(d._id); } ));
@@ -85,8 +85,8 @@ module.exports = function(db, options) {
      * finds entries matching `filters` (see model.filter),
      * includes docs if `shouldIncludeDocs` is set
      */
-    service.filter = function(shouldIncludeDocs, filters, next) {
-        findAll(shouldIncludeDocs, filters, next);
+    service.filter = function(options, next) {
+        findAll(options, next);
     };
 
     /**

@@ -7,19 +7,18 @@ var assert = require('assert')
   , model = 'name'
   , resources = [{id:1,name:'foo'}, {id:2,name:'bar'}, {id:3,name:'baz'}]
   , mock = {
-        findAll: function(shouldIncludeDocs, next) {
-            if (shouldIncludeDocs) {
-                next(null, resources);
+        findAll: function(options, next) {
+            var r = (_.isEmpty(options.filters)) ?
+                resources :
+                _.filter(resources, function(r) { return _.every(options.filters, function(f) { return r[f.property] == f.filter; }); });
+            if (options.shouldIncludeDocs) {
+                next(null, r);
             } else {
-                next(null, _.pluck(resources, 'id'));
+                next(null, _.pluck(r, 'id'));
             }
         },
         findById: function(id, next) {
             next(null, _.filter(resources, function(r) { return r.id === id; })[0] || {id: id, name: 'foo'});
-        },
-        filter: function(shouldIncludeDocs, filters, next) {
-            var filtered = _.filter(resources, function(r) { return _.every(filters, function(f) { return r[f.property] == f.filter; }); });
-            next(null, (shouldIncludeDocs) ? filtered : _.map(filtered, function(f) { return f.id; }));
         },
         save: function(data, next) {
             next(null, data.id || 7);
