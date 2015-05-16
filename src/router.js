@@ -13,7 +13,7 @@ module.exports = function(service, options) {
             manifest: true,
             rootElement: configuration.view
         })
-      , model = require('./model')
+      , model = require('untyped')
       , router = {};
     
     (function init() {

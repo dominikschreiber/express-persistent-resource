@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert')
-  , model = require('../src/model')
+  , model = require('untyped')
   , _ = require('lodash')
   , resource = 'test'
   , baseurl = '/api/v1/' + resource

@@ -4,7 +4,7 @@ module.exports = function(db, options) {
     var service = {}
       , _ = require('lodash')
       , crypto = require('crypto')
-      , model = require('./model')
+      , model = require('untyped')
       , configuration = _.defaults(options, {
           view: '',
           fields: {},
