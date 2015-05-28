@@ -1,5 +1,7 @@
 # express-persistent-resource
 
+*If you're using a full ORM (namely: [sequelize](http://sequelizejs.com)), consider using [express-rest-orm](https://github.com/dominikschreiber/express-rest-orm) instead. If not, consider using both sequelize and express-rest-orm.*
+
 [![Build Status](https://img.shields.io/travis/dominikschreiber/express-persistent-resource.svg?style=flat-square)](https://travis-ci.org/dominikschreiber/express-persistent-resource) [![Version](https://img.shields.io/npm/v/express-persistent-resource.svg?style=flat-square)](https://www.npmjs.com/package/express-persistent-resource) [![Downloads](https://img.shields.io/npm/dm/express-persistent-resource.svg?style=flat-square)](https://www.npmjs.com/package/express-persistent-resource) [![License](https://img.shields.io/npm/l/express-persistent-resource.svg?style=flat-square)](LICENSE) [![Join the chat at https://gitter.im/dominikschreiber/express-persistent-resource](https://img.shields.io/badge/gitter-join%20chat-green.svg?style=flat-square)](https://gitter.im/dominikschreiber/express-persistent-resource?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 *express-persistent-resource* creates a full-featured CRUD resource (express) middleware that persists all information to a given CouchDB instance. It's as simple as
